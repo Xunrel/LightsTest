@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -83,7 +85,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
-        _manager.registerListener(this, _lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        _manager.registerListener(this, _lightSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        int minDelay = _lightSensor.getMinDelay();
+//        int maxDelay = _lightSensor.getMaxDelay();
     }
 
     public void toggleRegistering(View view) {
@@ -101,9 +105,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             _blinkLayout.clearAnimation();
             _blinkButton.setText("Start Blinking");
         } else {
-            int blinkCounter = _random.nextInt(10) + 1;
+            int blinkCounter = _random.nextInt(10);
+
+            if (blinkCounter == 0) blinkCounter = 1;
+            int calculatedRepeat = (blinkCounter * 2) - 1;
+
             _blinkCountTextView.setText(String.format(_blinkCountTextTemplate, blinkCounter));
-            _blinkAnimation.setRepeatCount(blinkCounter);
+            _blinkAnimation.setRepeatCount(calculatedRepeat);
             _blinkLayout.startAnimation(_blinkAnimation);
             _blinkButton.setText("Stop");
         }
@@ -118,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private void createBlinkAnimation() {
         _blinkAnimation = new AlphaAnimation(1, 0);
         _blinkAnimation.setInterpolator(new LinearInterpolator());
-        _blinkAnimation.setDuration(50);
+        _blinkAnimation.setDuration(170);
         _blinkAnimation.setRepeatCount(Animation.INFINITE);
         _blinkAnimation.setRepeatMode(Animation.REVERSE);
 
