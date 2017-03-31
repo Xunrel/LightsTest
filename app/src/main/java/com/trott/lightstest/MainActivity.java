@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private String _blinkCountTextTemplate = "Blink counts: %s";
     private Animation _blinkAnimation;
     private RelativeLayout _blinkLayout;
+    private ConstraintLayout _constraintLayout;
     private boolean _isBlinking = false;
     private Random _random;
 
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         _blinkLayout = (RelativeLayout)findViewById(R.id.blinkLayout);
         _blinkLayout.setBackgroundColor(Color.BLACK);
+//        _constraintLayout = (ConstraintLayout)findViewById(R.id.constraintLayout);
+//        _constraintLayout.setBackgroundColor(Color.BLACK);
         _lxTextView = (TextView)findViewById(R.id.lxTextView);
         _blinkCountTextView = (TextView)findViewById(R.id.blinkCountTextView);
         _blinkButton = (Button)findViewById(R.id.blinkButton);
