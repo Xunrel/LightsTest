@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -26,14 +27,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor _lightSensor;
     private TextView _lxTextView;
     private TextView _blinkCountTextView;
+    private TextView _lxValuesTextView;
     private Button _blinkButton;
+    private Button _registerButton;
     private String _lxTextTemplate = "Current lx: %s";
     private String _blinkCountTextTemplate = "Blink counts: %s";
     private Animation _blinkAnimation;
     private RelativeLayout _blinkLayout;
-    private ConstraintLayout _constraintLayout;
     private boolean _isBlinking = false;
+    private boolean _isRegistering = false;
     private Random _random;
+    private ArrayList<Float> _lxValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +49,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         _blinkLayout = (RelativeLayout)findViewById(R.id.blinkLayout);
         _blinkLayout.setBackgroundColor(Color.BLACK);
-//        _constraintLayout = (ConstraintLayout)findViewById(R.id.constraintLayout);
-//        _constraintLayout.setBackgroundColor(Color.BLACK);
         _lxTextView = (TextView)findViewById(R.id.lxTextView);
         _blinkCountTextView = (TextView)findViewById(R.id.blinkCountTextView);
+        _lxValuesTextView = (TextView)findViewById(R.id.lxValuesTextView);
         _blinkButton = (Button)findViewById(R.id.blinkButton);
+        _registerButton = (Button)findViewById(R.id.registerButton);
 
+        _lxValues = new ArrayList<>();
         _random = new Random();
         createBlinkAnimation();
     }
@@ -58,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         float lxValue = event.values[0];
+        if(_isRegistering) {
+            _lxValues.add(lxValue);
+        }
         _lxTextView.setText(String.format(_lxTextTemplate, lxValue));
     }
 
@@ -76,6 +84,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
         _manager.registerListener(this, _lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void toggleRegistering(View view) {
+        _isRegistering = !_isRegistering;
+        if (!_isRegistering && !_lxValues.isEmpty()){
+            showLxValues();
+        }
     }
 
     public void toggleBlinking(View view) {
@@ -111,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onAnimationStart(Animation animation) {
                 _isBlinking = true;
+                _isRegistering = true;
                 Log.d("Blink Animation", "Starting animation");
             }
 
@@ -120,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 _blinkButton.setText("Start Blinking");
                 Log.d("Blink Animation", "Stopping animation");
                 _isBlinking = false;
+                _isRegistering = false;
+                showLxValues();
             }
 
             @Override
@@ -127,5 +145,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 Log.d("Blink Animation", "Repeating animation");
             }
         });
+    }
+
+    private void showLxValues() {
+        String lxValuesText = "lx Values.\n";
+        for(int i = 0; i < _lxValues.size(); i ++) {
+            lxValuesText += String.format("%s\n", _lxValues.get(i));
+        }
+        _lxValuesTextView.setText(lxValuesText);
+        _lxValues.clear();
     }
 }

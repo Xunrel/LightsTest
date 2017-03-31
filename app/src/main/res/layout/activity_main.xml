@@ -9,11 +9,10 @@
 
     <RelativeLayout
         android:id="@+id/blinkLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginRight="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -62,6 +61,29 @@
             android:layout_marginBottom="21dp"
             android:text="Blink counts:"
             android:textColor="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/lxValuesTextView"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/blinkButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="lx Values:"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/registerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/lxValuesTextView"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/lxValuesTextView"
+            android:onClick="toggleRegistering"
+            android:text="Register"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
