@@ -75,18 +75,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void toggleBlinking(View view) {
-        if (!_isBlinking) {
+
+
+        if (_isBlinking) {
+            _isBlinking = false;
+            _blinkLayout.clearAnimation();
+            _blinkButton.setText("Start Blinking");
+        } else {
             int blinkCounter = _random.nextInt(10) + 1;
             _blinkCountTextView.setText(String.format(_blinkCountTextTemplate, blinkCounter));
             _blinkAnimation.setRepeatCount(blinkCounter);
             _blinkLayout.startAnimation(_blinkAnimation);
             _blinkButton.setText("Stop");
-        } else {
-            _blinkLayout.clearAnimation();
-            _blinkButton.setText("Start Blinking");
         }
-
-        _isBlinking = !_isBlinking;
     }
 
     private void blink(int times, int duration) {
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         _blinkAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+                _isBlinking = true;
                 Log.d("Blink Animation", "Starting animation");
             }
 
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 _blinkLayout.clearAnimation();
                 _blinkButton.setText("Start Blinking");
                 Log.d("Blink Animation", "Stopping animation");
+                _isBlinking = false;
             }
 
             @Override
